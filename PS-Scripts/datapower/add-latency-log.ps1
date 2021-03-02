@@ -9,7 +9,7 @@
 
 #Enter FTP details where logs need to be rolled off
 
-$device="hostname"
+$device="non-prod"
 $ftp_server = "127.0.0.1"
 $ftp_login = "ftpuser"
 $ftp_password = "ftppassword"
@@ -21,7 +21,7 @@ $datapower_login_id=$args[1]
 $datapower_login_password=$args[2]
 $datapower_domains=$args[3]
 
-if($datapower_xmi_url -eq $null -or $datapower_login_id -eq $null -or $datapower_login_password -eq $null -or $datapower_domain -eq $null){
+if($datapower_xmi_url -eq $null -or $datapower_login_id -eq $null -or $datapower_login_password -eq $null -or $datapower_domains -eq $null){
     write-output "Invalid list of arguments passed, check the input"
     exit
 }
@@ -102,7 +102,7 @@ foreach($domain in $datapower_domains){
     #Write-Output $Body
 
     try{
-        $resp=Invoke-WebRequest -Headers $headers -Uri $url -Method Post -Body $Body -ContentType text/xml
+        $resp=Invoke-WebRequest -Headers $headers -Uri $datapower_xmi_url -Method Post -Body $Body -ContentType text/xml
         write-output "Success: $($domain)"  $resp.Content
     }
     catch{
