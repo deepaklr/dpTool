@@ -3,7 +3,7 @@
 # Script downloads datapower configuration for a given device/domain and zips the file
 # Usage : ./download-domain-config <datapower-xmi-url> <login-id> <password> <domain name>
 #
-#      Example: ./download-domain-config https://10.201.187.252:5550/service/mgmt/current admin admin POC-Domain
+#      Example: ./download-domain-config https://127.0.0.1:5550/service/mgmt/current admin admin POC-Domain
 #------------------------------------------------------------------------------------------------------
 
 
@@ -18,8 +18,9 @@ if($datapower_xmi_url -eq $null -or $datapower_login_id -eq $null -or $datapower
 }
 
 
-$Credential = [System.Management.Automation.PSCredential]::new($datapower_login_id,(ConvertTo-SecureString $datapower_login_password -AsPlainText -Force))
-$AUTH="Basic $($Credential)"
+$bytes = [System.Text.Encoding]::ASCII.GetBytes($datapower_login_id + ":" + $datapower_login_password)
+$base64 = [System.Convert]::ToBase64String($bytes)
+$AUTH = "Basic $base64"
 
 
 $Body = '<env:Envelope xmlns:env="http://schemas.xmlsoap.org/soap/envelope/">
