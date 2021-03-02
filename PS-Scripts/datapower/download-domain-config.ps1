@@ -21,11 +21,11 @@ if($datapower_xmi_url -eq $null -or $datapower_login_id -eq $null -or $datapower
 $bytes = [System.Text.Encoding]::ASCII.GetBytes($datapower_login_id + ":" + $datapower_login_password)
 $base64 = [System.Convert]::ToBase64String($bytes)
 $AUTH = "Basic $base64"
-
+#write-output $AUTH $datapower_xmi_url
 
 $Body = '<env:Envelope xmlns:env="http://schemas.xmlsoap.org/soap/envelope/">
    <env:Body>
-      <dp:request xmlns:dp="http://www.datapower.com/schemas/management" domain="' + $($domain_name) + '">
+      <dp:request xmlns:dp="http://www.datapower.com/schemas/management" domain="' + $($datapower_domain) + '">
          <dp:get-config/>
       </dp:request>
    </env:Body>
@@ -47,10 +47,13 @@ $Body = '<env:Envelope xmlns:env="http://schemas.xmlsoap.org/soap/envelope/">
 #Write-Output $Body
 
 $headers = @{ Authorization = $AUTH }
-$resp=Invoke-WebRequest -Credential $Credential -Uri $datapower_xmi_url -Headers $headers  -Method Post -Body $Body -ContentType text/xml -OutFile export.xml
+$resp=Invoke-WebRequest -Uri $datapower_xmi_url -Headers $headers  -Method Post -Body $Body -ContentType text/xml 
 
-if($enc_resp.StatusCode -eq 200){
-    Compress-Archive -path ".\export.xml" -DestinationPath ".\$($domain_name)-$((get-date).ToString()).zip" -force
+$resp.Content | Out-File ".\export.xml" -Force
+
+if($resp.StatusCode -eq 200){
+    $fname=".\$($datapower_domain)-$((get-date -Format "ddMMyy-HHmmssfff").ToString()).zip"
+    Compress-Archive -path ".\export.xml" -DestinationPath $fname -force
+ 
+    Write-Output "Output file $fname"
 }
-
-
