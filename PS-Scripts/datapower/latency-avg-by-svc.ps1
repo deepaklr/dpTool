@@ -35,4 +35,8 @@ if($input_files -eq $null){
 #f12 -- response transmitted  -- is used as total average round trip time in this script, change the field value to any other based on your requirement
 
 $hdr = "day","mon","dt","yr","time","code","mpgw","tid","gtid","hdr","f1","f2","f3","f4","f5","f6","f7","f8","f9","f10","f11","f12","f13","f14","f15","f16","svc"
-(Get-Content $input_files) -replace '\s+',' ' | ConvertFrom-csv -Header $hdr -Delimiter ' ' | Group-Object mpgw | Select-Object Name,@{Name="Count"; Expression={$_.Group.Count}},@{Name="DP_AVG"; Expression={ ($_.Group| Measure-Object f12 -Average).Average }}
+(Get-Content $input_files) -replace '\s+',' ' | ConvertFrom-csv -Header $hdr -Delimiter ' ' `
+ | Group-Object mpgw | Select-Object Name, `
+ @{Name="Count"; Expression={$_.Group.Count}}, `
+ @{Name="Total-Response-Time"; Expression={ ($_.Group| Measure-Object f12 -Average).Average }}, `
+ @{Name="Request-Flow-Time"; Expression={ ($_.Group| Measure-Object f9 -Average).Average }}
