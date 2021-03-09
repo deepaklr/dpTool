@@ -1,4 +1,4 @@
-﻿
+
 # Author: deepak ramabhat - deepaklr@in.ibm.com, deepaklr@outlook.com
 # History: 9-3-21 - 1.0 - Initial
 # Script collects API details of all yaml files in a given folder and creates a HTML table with details
@@ -45,7 +45,13 @@ foreach($f in  $files){
         }
         
     }
-    $html_line += "</TD>  <TD>$($yaml."x-ibm-configuration".properties."target-url".value)</TD></TR>"
+    $html_line += "</TD><TD>"
+    foreach($urls in $yaml."x-ibm-configuration".properties.keys){
+        if($urls -ilike '*url*'){
+            $html_line += "$($yaml."x-ibm-configuration".properties.$urls.value)<br/>"
+        }
+    }
+    $html_line += "</TD></TR>"
 }
 $html_line += "</TABLE></BODY></HTML>"
 
