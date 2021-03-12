@@ -1,6 +1,8 @@
 # Author: deepak ramabhat - deepaklr@in.ibm.com,deepaklr@outlook.com
 # History: 11-3-21 - 1.0 - Initial
 # Script captures cpu usage of the given device, schedule to run at every 10 minutes or so to capture continuous usage
+# Output file format - comma separated: 
+# local-time,datapower-time,cpu-last-10s,cpu-last-1m,cpu-last-10m,cpu-last-1h,cpu-last-1d
 #
 # Usage : ./monitor-cpu <datapower-xmi-url> <login-id> <password> <output gfile name>
 #
